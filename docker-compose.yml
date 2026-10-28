@@ -1,0 +1,39 @@
+services:
+  postgres:
+    container_name: postgres        # gives the container a fixed name (otherwise Docker assigns a random one)
+    image: postgres                 # the official postgres image to build the container from
+    environment:
+      POSTGRES_USER: mobin          # database username
+      POSTGRES_PASSWORD: password   # database password
+      PGDATA: /data/postgres        # path inside the container where data will be stored
+    volumes:
+      - postgres:/data/postgres     # maps the volume to that path so data isn't lost on restart
+    ports:
+      - "5433:5432"                 # host:container — access postgres from your machine on port 5432
+    networks:
+      - postgres                    # joins this network to communicate with pgadmin
+    restart: unless-stopped         # auto-restarts if it crashes, unless you manually stop it
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4           # official pgAdmin image (UI for managing postgres)
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      # ↑ reads from .env file, if not found → falls back to the default after :-
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      # ↑ same idea — password from .env or "admin" as default
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      # ↑ runs in desktop mode (no login screen every time)
+    volumes:
+      - pgadmin:/var/lib/pgadmin    # persists pgadmin settings so they survive container restarts
+    ports:
+      - "5050:80"                   # access pgadmin from your browser on localhost:5050
+    networks:
+      - postgres                    # same network so pgadmin can reach postgres by container name
+    restart: unless-stopped
+networks:
+  postgres:
+    driver: bridge                  # standard isolated network between the two containers
+volumes:
+  postgres:                         # volume for postgres data
+  pgadmin:                          # volume for pgadmin settings

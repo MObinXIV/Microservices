@@ -1,4 +1,4 @@
-package com.mobin.fraud;
+package com.mobin.clients.fraud;
 
 public record FraudCheckResponse(Boolean isFraudster) {
 }

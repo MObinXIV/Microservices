@@ -15,6 +15,13 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    export:
+      zipkin:
+        endpoint: http://localhost:9411/api/v2/spans
 eureka:
   client:
     service-url:

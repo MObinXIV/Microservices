@@ -3,6 +3,8 @@ server:
 spring:
   application:
     name: customer
+  rabbitmq:
+    addresses: localhost:5672
   cloud:
     openfeign:
       micrometer:

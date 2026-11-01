@@ -12,7 +12,11 @@ spring:
       exchange: internal.exchange
       routing-key: internal.notification.routing-key
       default-receive-queue: notification.queue
+      observation-enabled: true
     addresses: localhost:5672
+    listener:
+      simple:
+        observation-enabled: true
   datasource:
     url: jdbc:postgresql://localhost:5433/notification
     username: mobin

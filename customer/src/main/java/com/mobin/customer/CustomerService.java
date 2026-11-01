@@ -3,9 +3,13 @@ package com.mobin.customer;
 import com.mobin.amqp.RabbitMQMessageProducer;
 import com.mobin.clients.fraud.FraudCheckResponse;
 import com.mobin.clients.fraud.FraudClient;
+import com.mobin.clients.notification.NotificationClient;
 import com.mobin.clients.notification.NotificationRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import javax.management.Notification;
 
 @Service
 @RequiredArgsConstructor

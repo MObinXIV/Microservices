@@ -1,42 +1,149 @@
 services:
   postgres:
     container_name: postgres
-    image: postgres
+    image: postgres:16
     environment:
+      POSTGRES_DB: postgres
       POSTGRES_USER: mobin
       POSTGRES_PASSWORD: password
-      PGDATA: /data/postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - postgres:/data/postgres
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5433:5432"
     networks:
       - postgres
+      - spring
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mobin -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   zipkin:
     container_name: zipkin
-    image: openzipkin/zipkin
+    image: openzipkin/zipkin:latest
     ports:
       - "9411:9411"
     networks:
-      - postgres
+      - spring
+    restart: unless-stopped
+
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq:4-management
-#    environment:
-#      RABBITMQ_DEFAULT_USER: mobin
-#      RABBITMQ_DEFAULT_PASS: password
+    environment:
+      RABBITMQ_DEFAULT_USER: mobin
+      RABBITMQ_DEFAULT_PASS: password
     ports:
       - "5672:5672"
       - "15672:15672"
     networks:
+      - spring
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  eureka-server:
+    container_name: eureka-server
+    image: mobinxiv/eureka-server:latest
+    ports:
+      - "8761:8761"
+    networks:
+      - spring
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - zipkin
+    restart: unless-stopped
+
+  apigw:
+    container_name: apigw
+    image: mobinxiv/apigw:latest
+    ports:
+      - "8083:8083"
+    networks:
+      - spring
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      eureka-server:
+        condition: service_started
+      zipkin:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+  customer:
+    container_name: customer
+    image: mobinxiv/customer:latest
+    ports:
+      - "8080:8080"
+    networks:
+      - spring
       - postgres
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      eureka-server:
+        condition: service_started
+      zipkin:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+  fraud:
+    container_name: fraud
+    image: mobinxiv/fraud:latest
+    ports:
+      - "8082:8082"
+    networks:
+      - spring
+      - postgres
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      eureka-server:
+        condition: service_started
+      zipkin:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+  notification:
+    container_name: notification
+    image: mobinxiv/notification:latest
+    ports:
+      - "8081:8081"
+    networks:
+      - spring
+      - postgres
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      eureka-server:
+        condition: service_started
+      zipkin:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
     restart: unless-stopped
 
 networks:
   postgres:
     driver: bridge
+  spring:
+    driver: bridge
 
 volumes:
-  postgres:
+  postgres_data:

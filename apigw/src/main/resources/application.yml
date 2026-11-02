@@ -13,7 +13,7 @@ spring:
             - id: fraud
               uri: lb://FRAUD
               predicates:
-                - Path=/api/v1/fraud/**
+                - Path=/api/v1/fraud-check/**
 
 server:
   port: 8083

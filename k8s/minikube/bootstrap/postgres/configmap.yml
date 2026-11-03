@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+data:
+  POSTGRES_DB: "mobin"
+  POSTGRES_USER: "mobin"
+  POSTGRES_PASSWORD: "password"
+

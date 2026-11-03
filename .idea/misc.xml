@@ -11,6 +11,7 @@
         <option value="$PROJECT_DIR$/clients/pom.xml" />
         <option value="$PROJECT_DIR$/notification/pom.xml" />
         <option value="$PROJECT_DIR$/apigw/pom.xml" />
+        <option value="$PROJECT_DIR$/amqp/pom.xml" />
       </list>
     </option>
   </component>

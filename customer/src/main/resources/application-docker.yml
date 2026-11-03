@@ -38,5 +38,6 @@ eureka:
       defaultZone: http://eureka-server:8761/eureka
     fetch-registry: true
     registry-fetch-interval-seconds: 5
+    enabled: false
 #    fetch-registry: false
 #    register-with-eureka: false

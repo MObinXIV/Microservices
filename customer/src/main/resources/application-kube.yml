@@ -1,0 +1,43 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: customer
+  rabbitmq:
+    addresses: rabbitmq:5672
+    username: mobin
+    password: password
+    template:
+      observation-enabled: true
+  cloud:
+    openfeign:
+      micrometer:
+        enabled: true
+  datasource:
+    url: jdbc:postgresql://postgres:5432/customer
+    username: mobin
+    password: password
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    export:
+      zipkin:
+        endpoint: http://zipkin:9411/api/v2/spans
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka
+    fetch-registry: true
+    registry-fetch-interval-seconds: 5
+    enabled: false
+#    fetch-registry: false
+#    register-with-eureka: false

@@ -52,6 +52,10 @@
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-micrometer</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.mobin</groupId>
             <artifactId>amqp</artifactId>
             <version>0.0.1-SNAPSHOT</version>

@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fraud
+  labels:
+    app: fraud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fraud
+  template:
+    metadata:
+      name: fraud
+      labels:
+        app: fraud
+    spec:
+      containers:
+        - name: fraud
+          image: mobinxiv/fraud:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8082
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: kube
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres:5432/fraud
+            - name: SPRING_DATASOURCE_USERNAME
+              value: mobin
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: password
+            - name: SPRING_RABBITMQ_HOST
+              value: rabbitmq
+            - name: SPRING_RABBITMQ_USERNAME
+              value: admin
+            - name: SPRING_RABBITMQ_PASSWORD
+              value: admin
+            - name: EUREKA_CLIENT_ENABLED
+              value: "false"
+      restartPolicy: Always

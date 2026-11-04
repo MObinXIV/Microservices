@@ -5,6 +5,8 @@ spring:
     name: customer
   rabbitmq:
     addresses: localhost:5672
+    username: mobin
+    password: password
     template:
       observation-enabled: true
   cloud:

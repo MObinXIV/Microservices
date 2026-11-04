@@ -48,36 +48,36 @@ services:
       timeout: 5s
       retries: 10
 
-  eureka-server:
-    container_name: eureka-server
-    image: mobinxiv/eureka-server:latest
-    ports:
-      - "8761:8761"
-    networks:
-      - spring
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    depends_on:
-      - zipkin
-    restart: unless-stopped
+#  eureka-server:
+#    container_name: eureka-server
+#    image: mobinxiv/eureka-server:latest
+#    ports:
+#      - "8761:8761"
+#    networks:
+#      - spring
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    depends_on:
+#      - zipkin
+#    restart: unless-stopped
 
-  apigw:
-    container_name: apigw
-    image: mobinxiv/apigw:latest
-    ports:
-      - "8083:8083"
-    networks:
-      - spring
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    depends_on:
-      eureka-server:
-        condition: service_started
-      zipkin:
-        condition: service_started
-      rabbitmq:
-        condition: service_healthy
-    restart: unless-stopped
+#  apigw:
+#    container_name: apigw
+#    image: mobinxiv/apigw:latest
+#    ports:
+#      - "8083:8083"
+#    networks:
+#      - spring
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    depends_on:
+#      eureka-server:
+#        condition: service_started
+#      zipkin:
+#        condition: service_started
+#      rabbitmq:
+#        condition: service_healthy
+#    restart: unless-stopped
   customer:
     container_name: customer
     image: mobinxiv/customer:latest
@@ -89,8 +89,6 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
-      eureka-server:
-        condition: service_started
       zipkin:
         condition: service_started
       rabbitmq:
@@ -109,8 +107,6 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
-      eureka-server:
-        condition: service_started
       zipkin:
         condition: service_started
       rabbitmq:
@@ -122,15 +118,13 @@ services:
     container_name: notification
     image: mobinxiv/notification:latest
     ports:
-      - "8081:8081"
+      - "8084:8081"
     networks:
       - spring
       - postgres
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
-      eureka-server:
-        condition: service_started
       zipkin:
         condition: service_started
       rabbitmq:

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: fraud
-          image: mobinxiv/fraud:latest
+          image: localhost:5000/mobin/fraud:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8082

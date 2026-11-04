@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: customer
-          image: mobinxiv/customer:latest
+          image: localhost:5000/mobin/customer:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

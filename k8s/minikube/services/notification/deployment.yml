@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: notification
-          image: mobinxiv/notification:latest
+          image: localhost:5000/mobin/notification:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8081
